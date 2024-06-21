@@ -1,5 +1,7 @@
 # demoexamen
 
+py -m pip install Django          
+
 manage.py 
 
 python manage.py runserver
