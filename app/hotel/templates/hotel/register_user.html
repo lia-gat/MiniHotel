@@ -1,0 +1,14 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+
+
+<div class="registration-container">
+    <h2>Регистрация пользователя</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Зарегистрировать</button>
+    </form>
+</div>
+{% endblock %}

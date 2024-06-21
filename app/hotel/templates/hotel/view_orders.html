@@ -1,0 +1,25 @@
+{% extends 'base_generic.html' %}
+{% block content %}
+  <h2>Заказы</h2>
+  <div class="container">
+    <div class="row">
+      {% for order in orders %}
+        <div class="col-md-4 mb-4">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">{{ order.details }}</h5>
+              {% if user.role == 'manager' %}
+                <p class="card-text">{{ order.payment_status }}</p>
+                <p class="card-text">{{ order.status }}</p>
+              {% elif user.role == 'сотрудник_обслуживания_номеров' %}
+                <p class="card-text">{{ order.payment_status }}</p>
+              {% elif user.role == 'сотрудник_предоставления_услуг' %}  
+                <p class="card-text">{{ order.status }}</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiniHotel - Мини-отель</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #343a40;
+            color: #ffffff;
+            padding: 10px 0;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        header ul {
+            list-style-type: none;
+            padding: 0;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        header ul li {
+            display: inline;
+            margin-right: 20px;
+        }
+
+        header ul li a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        header ul li a:hover {
+            text-decoration: underline;
+        }
+
+        nav.dark-nav {
+            background-color: #212529;
+            color: #ffffff;
+            padding: 10px 0;
+        }
+
+        nav.dark-nav ul {
+            list-style-type: none;
+            padding: 0;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        nav.dark-nav ul li {
+            display: inline-block;
+            margin-right: 20px;
+        }
+
+        nav.dark-nav ul li a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        nav.dark-nav ul li a:hover {
+            text-decoration: underline;
+        }
+
+        main {
+            padding: 20px;
+        }
+
+        .content-wrapper {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Мини-отель</h1>
+        <ul>
+            <li><a href="{% url 'home' %}">Домой</a></li>
+            {% if user.is_authenticated %}
+            <li>
+                <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-link text-white">Выйти</button>
+                </form>
+            </li>
+            {% endif %}
+        </ul>
+    </header>
+    <nav class="dark-nav">
+        <ul>
+            <li><a href="{% url 'home' %}">Домой</a></li>
+            {% if user.is_authenticated %}
+                {% if user.role == 'manager' %}
+                    <li><a href="{% url 'user_list' %}">Просмотр пользователей</a></li>
+                    <li><a href="{% url 'register_user' %}">Регистрация пользователя</a></li>
+                    <li><a href="{% url 'view_orders' %}">Просмотр заказов</a></li>
+                    <li><a href="{% url 'assign_shift' %}">Создать смену</a></li>
+                    <li><a href="{% url 'view_shifts' %}">Просмотр смен</a></li>
+                {% elif user.role == 'сотрудник_обслуживания_номеров' %}
+                    <li><a href="{% url 'create_order' %}">Создать заказ</a></li>
+                    <li><a href="{% url 'view_orders' %}">Просмотр заказов</a></li>
+                {% elif user.role == 'сотрудник_предоставления_услуг' %}
+                    <li><a href="{% url 'view_orders' %}">Просмотр заказов</a></li>
+                {% endif %}
+            {% else %}
+                <li><a href="{% url 'login' %}">Логин</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    <main>
+        <div class="content-wrapper">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </main>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Update Order Payment Status{% endblock %}
+
+{% block content %}
+  <h2>Update Payment Status for Order {{ order.orderid }}</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Update Status</button>
+  </form>
+  <a href="{% url 'main' %}">Back to Order Details</a>
+{% endblock %}
