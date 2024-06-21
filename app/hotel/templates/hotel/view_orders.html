@@ -9,12 +9,51 @@
             <div class="card-body">
               <h5 class="card-title">{{ order.details }}</h5>
               {% if user.role == 'manager' %}
-                <p class="card-text">{{ order.payment_status }}</p>
-                <p class="card-text">{{ order.status }}</p>
+              <form method="post" action="{% url 'view_orders' %}">
+                {% csrf_token %}
+                <input type="hidden" name="order_id" value="{{ order.id }}">
+                  <div class="form-group">
+                    <label for="payment_status_{{ order.id }}">Статус оплаты:</label>
+                    <select name="payment_status" id="payment_status_{{ order.id }}" class="form-control">
+                      <option value="Принят"{% if order.payment_status == 'Принят' %} selected{% endif %}>Принят</option>
+                      <option value="Оплачен"{% if order.payment_status == 'Оплачен' %} selected{% endif %}>Оплачен</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="status_{{ order.id }}">Статус заказа:</label>
+                    <select name="status" id="status_{{ order.id }}" class="form-control">
+                      <option value="В процессе"{% if order.status == 'В процессе' %} selected{% endif %}>В процессе</option>
+                      <option value="Готов"{% if order.status == 'Готов' %} selected{% endif %}>Готов</option>
+                    </select>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Обновить</button>
+                </form>
               {% elif user.role == 'сотрудник_обслуживания_номеров' %}
-                <p class="card-text">{{ order.payment_status }}</p>
-              {% elif user.role == 'сотрудник_предоставления_услуг' %}  
-                <p class="card-text">{{ order.status }}</p>
+              <form method="post" action="{% url 'view_orders' %}">
+                {% csrf_token %}
+                <input type="hidden" name="order_id" value="{{ order.id }}">
+                <div class="form-group">
+                  <label for="payment_status_{{ order.id }}">Статус оплаты:</label>
+                  <select name="payment_status" id="payment_status_{{ order.id }}" class="form-control">
+                    <option value="Принят"{% if order.payment_status == 'Принят' %} selected{% endif %}>Принят</option>
+                    <option value="Оплачен"{% if order.payment_status == 'Оплачен' %} selected{% endif %}>Оплачен</option>
+                  </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Обновить</button>
+              </form>
+              {% elif user.role == 'сотрудник_предоставления_услуг' %}
+              <form method="post" action="{% url 'view_orders' %}">
+                {% csrf_token %}
+                <input type="hidden" name="order_id" value="{{ order.id }}">
+              <div class="form-group">
+                <label for="status_{{ order.id }}">Статус заказа:</label>
+                <select name="status" id="status_{{ order.id }}" class="form-control">
+                  <option value="В процессе"{% if order.status == 'В процессе' %} selected{% endif %}>В процессе</option>
+                  <option value="Готов"{% if order.status == 'Готов' %} selected{% endif %}>Готов</option>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-primary">Обновить</button>
+            </form>
               {% endif %}
             </div>
           </div>

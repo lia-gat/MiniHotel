@@ -69,15 +69,19 @@ def view_orders(request):
     # Отображение страницы просмотра заказов
     return render(request, 'hotel/view_orders.html', {'orders': orders})
 
+
 @login_required
 def update_order(request, order_id):
-    # Проверка, что пользователь имеет необходимую роль
-    if request.user.role not in ['сотрудник_обслуживания_номеров']:
-        return redirect('home')
-    
-    order = Order.objects.get(id=order_id)  # Получение заказа по ID
-    # Отображение страницы обновления заказа
-    return render(request, 'hotel/update_order.html')
+    order = get_object_or_404(Order, id=order_id)
+    if request.method == 'POST':
+        # Здесь должна быть логика для обновления статуса заказа
+        form = OrderForm(request.POST, instance=order)
+        if form.is_valid():
+            form.save()
+            return redirect('view_orders')
+    else:
+        form = OrderForm(instance=order)
+    return render(request, 'hotel/update_order.html', {'form': form, 'order': order})
 
 @login_required
 def create_order(request):
@@ -97,22 +101,24 @@ def create_order(request):
     
     # Отображение страницы создания заказа
     return render(request, 'hotel/create_order.html', {'form': form})
-
 @login_required
-def change_order_status(request, order_id, status):
+def change_order_status(request, order_id):
     order = get_object_or_404(Order, id=order_id)
     
     # Проверка, что пользователь имеет необходимую роль
     if request.user.role not in ['сотрудник_обслуживания_номеров', 'сотрудник_предоставления_услуг']:
         return redirect('home')
     
-    # Проверка допустимости изменения статуса заказа в зависимости от роли пользователя
-    if (request.user.role == 'сотрудник_обслуживания_номеров' and status not in ['принят', 'оплачен']) or (request.user.role == 'сотрудник_предоставления_услуг' and status not in ['в_процессе', 'готов']):
-        return redirect('home')
+    if request.method == 'POST':
+        new_status = request.POST.get('status')
+        # Проверка допустимости изменения статуса заказа в зависимости от роли пользователя
+        if (request.user.role == 'сотрудник_обслуживания_номеров' and new_status in ['Принят', 'Оплачен']) or (request.user.role == 'сотрудник_предоставления_услуг' and new_status in ['В процессе', 'Готов']):
+            order.status = new_status
+            order.save()
+            return redirect('view_orders')
     
-    order.status = status  # Изменение статуса заказа
-    order.save()
-    return redirect('view_orders')  # Перенаправление на страницу просмотра заказов
+    # Если метод не POST или статус не допустим, возвращаемся на страницу заказов
+    return redirect('view_orders')
 
 @login_required
 def home(request):
