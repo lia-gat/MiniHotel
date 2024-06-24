@@ -7,7 +7,7 @@ from .models import User, Order, Shift
 @login_required
 def register_user(request):
     # Проверка, что пользователь является менеджером
-    if request.user.role != 'manager':
+    if request.user.role  not in ['manager','менеджер']:
         return redirect('home')
     
     if request.method == 'POST':
@@ -24,7 +24,7 @@ def register_user(request):
 @login_required
 def dismiss_user(request, user_id):
     # Проверка, что пользователь является менеджером
-    if request.user.role != 'manager':
+    if request.user.role  not in ['manager','менеджер']:
         return redirect('home')
     
     user = get_object_or_404(User, id=user_id)
@@ -35,9 +35,11 @@ def dismiss_user(request, user_id):
 @login_required
 def assign_shift(request):
     # Проверка, что пользователь является менеджером
-    if request.user.role != 'manager':
+    if request.user.role  not in ['manager','менеджер']:
         return redirect('home')
     
+
+
     if request.method == 'POST':
         form = ShiftAssignmentForm(request.POST)
         if form.is_valid():
@@ -52,9 +54,10 @@ def assign_shift(request):
 @login_required
 def view_shifts(request):
     # Проверка, что пользователь является менеджером
-    if request.user.role != 'manager':
+    if request.user.role not in ['manager','менеджер']:
         return redirect('home')
     
+
     shifts = Shift.objects.all()  # Получение всех смен
     # Отображение страницы просмотра смен
     return render(request, 'hotel/view_shifts.html', {'shifts': shifts})
@@ -62,7 +65,7 @@ def view_shifts(request):
 @login_required
 def view_orders(request):
     # Проверка, что пользователь имеет необходимую роль
-    if request.user.role not in ['manager', 'сотрудник_предоставления_услуг', 'сотрудник_обслуживания_номеров']:
+    if request.user.role not in ['manager','менеджер',  'сотрудник_предоставления_услуг', 'сотрудник_обслуживания_номеров']:
         return redirect('home')
     
     orders = Order.objects.all()  # Получение всех заказов
@@ -86,7 +89,7 @@ def update_order(request, order_id):
 @login_required
 def create_order(request):
     # Проверка, что пользователь имеет необходимую роль
-    if request.user.role != 'сотрудник_обслуживания_номеров':
+    if request.user.role not in ['manager','менеджер', 'сотрудник_обслуживания_номеров']: 
         return redirect('home')
     
     if request.method == 'POST':

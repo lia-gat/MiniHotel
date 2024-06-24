@@ -110,6 +110,14 @@
                     <li><a href="{% url 'user_list' %}">Просмотр пользователей</a></li>
                     <li><a href="{% url 'register_user' %}">Регистрация пользователя</a></li>
                     <li><a href="{% url 'view_orders' %}">Просмотр заказов</a></li>
+                    <li><a href="{% url 'create_order' %}">Создать заказ</a></li>
+                    <li><a href="{% url 'assign_shift' %}">Создать смену</a></li>
+                    <li><a href="{% url 'view_shifts' %}">Просмотр смен</a></li>
+                {% elif user.role == 'менеджер' %}
+                <li><a href="{% url 'user_list' %}">Просмотр пользователей</a></li>
+                    <li><a href="{% url 'register_user' %}">Регистрация пользователя</a></li>
+                    <li><a href="{% url 'view_orders' %}">Просмотр заказов</a></li>
+                    <li><a href="{% url 'create_order' %}">Создать заказ</a></li>
                     <li><a href="{% url 'assign_shift' %}">Создать смену</a></li>
                     <li><a href="{% url 'view_shifts' %}">Просмотр смен</a></li>
                 {% elif user.role == 'сотрудник_обслуживания_номеров' %}
